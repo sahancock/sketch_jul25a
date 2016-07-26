@@ -24,6 +24,7 @@ void setup() {
 }
 
 void loop() {
+
   for (uint8_t i = 0; i < SONAR_NUM; i++) {// Loop through all the sensors.   
     if (millis() >= pingTimer[i]) {         // Is it this sensor's time to ping?
       pingTimer[i] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
@@ -39,7 +40,10 @@ void loop() {
 void echoCheck() { // If ping received, set the sensor distance to array.
   if (sonar[currentSensor].check_timer()) {
     cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
+    
     pingResult(currentSensor);
+  
+    
     }  
 }
 
