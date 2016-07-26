@@ -46,7 +46,6 @@ void echoCheck() { // If ping received, set the sensor distance to array.
 
 void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the result.
    //The following code would be replaced with your code that does something with the ping result.
-
    if ((cm[sensor] < 20)){
     Serial.print("MOVE AWAY YOUR TOO CLOSE !!!!!!");
     Serial.println(" ");
