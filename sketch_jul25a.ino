@@ -8,8 +8,6 @@ unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should
 unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 
-
-
 NewPing sonar[SONAR_NUM] = {   // Sensor object array.
   NewPing(4, 5, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
   NewPing(6, 7, MAX_DISTANCE),
@@ -27,10 +25,7 @@ void setup() {
 
 void loop() {
   
-  for (uint8_t i = 0; i < SONAR_NUM; i++) {// Loop through all the sensors.
- 
-   
-    
+  for (uint8_t i = 0; i < SONAR_NUM; i++) {// Loop through all the sensors.   
     if (millis() >= pingTimer[i]) {         // Is it this sensor's time to ping?
       pingTimer[i] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
       sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
@@ -41,7 +36,6 @@ void loop() {
   }
   // Other code that *DOESN'T* analyze ping results can go here.
 }
-
 
 void echoCheck() { // If ping received, set the sensor distance to array.
   if (sonar[currentSensor].check_timer()) {
@@ -56,9 +50,7 @@ void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the re
    if ((cm[sensor] < 20)){
     Serial.print("MOVE AWAY YOUR TOO CLOSE !!!!!!");
     Serial.println(" ");
-    digitalWrite(13,LOW);
- 
-    
+    digitalWrite(13,LOW);   
    }
     else if((cm[sensor] < 35)){
     Serial.print("BE CAREFUL I CAN HURT YOU !!!!!!");
@@ -66,13 +58,11 @@ void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the re
   }
     else{
       digitalWrite(13,HIGH);
-    }
-   
+    }   
   Serial.print(sensor);
   Serial.print(" ");
   Serial.print(cm[sensor]);
-  Serial.println("cm");
- 
+  Serial.println("cm"); 
 }
 
  
