@@ -64,6 +64,9 @@ void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the re
     Serial.print("BE CAREFUL I CAN HURT YOU !!!!!!");
     Serial.println(" ");
   }
+    else{
+      digitalWrite(13,HIGH);
+    }
    
   Serial.print(sensor);
   Serial.print(" ");
