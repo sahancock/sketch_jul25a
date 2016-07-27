@@ -30,8 +30,7 @@ void loop() {
 		if (millis() >= pingTimer[i]) {         // Is it this sensor's time to ping?
 		  pingTimer[i] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
 		  sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
-		  currentSensor = i; // Sensor being accessed.
-       
+		  currentSensor = i; // Sensor being accessed. 
 		  cm[currentSensor] = 0; // Make distance zero in case there's no ping echo for this sensor.
 		  sonar[currentSensor].ping_timer(echoCheck);// Do the ping (processing continues, interrupt will call echoCheck to look for echo).
 		}
@@ -47,7 +46,6 @@ void loop() {
 
 void echoCheck() { // If ping received, set the sensor distance to array.
 	if (sonar[currentSensor].check_timer()) {
-  
 		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
 		if( sonar[currentSensor].ping_result = false){
       digitalWrite(13,HIGH);
@@ -60,26 +58,28 @@ void echoCheck() { // If ping received, set the sensor distance to array.
 
 void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the result.
     //Accepts sensor data from echoCheck and sets the sonarFlag to true or false
-    if ((cm[sensor] < 20)){
-      Serial.println("GROUP:  Under 20");
-      sonarFlag = false;   
+    int group = 0;
+	  if ((cm[sensor] < 20)){
+      sonarFlag = false;
+      group = 1;   
   	}
     else if((cm[sensor] < 35)){
-      Serial.println("GROUP:  20 to 35");  
+      group = 2;  
   	}
   	else{
-      Serial.println("GROUP:  Over 35");
       sonarFlag = true;
+      group = 3;
   	}    
-    Serial.print("SENSOR:  ");
-    Serial.println(sensor);
     
+	  Serial.print("   GROUP:  ");
+    Serial.println(group);
+	  Serial.print("  SENSOR:  ");
+    Serial.println(sensor);
   	Serial.print("DISTANCE:  ");
     Serial.print( cm[sensor]); 
     Serial.println("cm");
-  	Serial.print("FLAG:  ");
+  	Serial.print("   LIGHT:  ");
     Serial.print(sonarFlag);
-   
     Serial.println(" "); 	
     Serial.println(" ");
 }
