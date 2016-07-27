@@ -8,6 +8,7 @@ unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should
 unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 
+//Our Added Variables
 boolean sonarFlag = true;                //Sets control flag for making starting and stopping features
 
 NewPing sonar[SONAR_NUM] = {   // Sensor object array.
@@ -17,8 +18,7 @@ NewPing sonar[SONAR_NUM] = {   // Sensor object array.
 };
 
 void setup() {
-	pinMode(13, OUTPUT);
-	digitalWrite(13,HIGH);
+	pinMode(13, OUTPUT);                    //Turns pin13 on
 	Serial.begin(9600);
 	pingTimer[0] = millis() + 75;           // First ping starts at 75ms, gives time for the Arduino to chill before starting.
 	for (uint8_t i = 1; i < SONAR_NUM; i++) // Set the starting time for each sensor.
@@ -30,32 +30,43 @@ void loop() {
 		if (millis() >= pingTimer[i]) {         // Is it this sensor's time to ping?
 		  pingTimer[i] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
 		  sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
-		  currentSensor = i;                          // Sensor being accessed.
-		  cm[currentSensor] = 0;                      // Make distance zero in case there's no ping echo for this sensor.
+		  currentSensor = i; // Sensor being accessed.
+       
+		  cm[currentSensor] = 0; // Make distance zero in case there's no ping echo for this sensor.
 		  sonar[currentSensor].ping_timer(echoCheck);// Do the ping (processing continues, interrupt will call echoCheck to look for echo).
 		}
 	}
-  if(sonarFlag == true){
+  //Reads the sonarFlag and turns the LED on if true and off if false
+  if(sonarFlag == true){                       
     digitalWrite(13,HIGH);
   }
-  else{
+  else{                               
     digitalWrite(13,LOW);
   }
 }
 
 void echoCheck() { // If ping received, set the sensor distance to array.
 	if (sonar[currentSensor].check_timer()) {
+  
 		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
-		if( sonar[currentSensor].ping_result == false){
+		if( sonar[currentSensor].ping_result = false){
+      digitalWrite(13,HIGH);
 		}
 		else{
 			pingResult(currentSensor);
 		}
-  }  
+  } 
 }
 
+//void viewPingResultData(uin8_t sensor) {
+//      Serial.print(sensor);
+//      Serial.print(" ");
+//      Serial.print(cm[sensor]);
+//      Serial.println("cm");
+//      Serial.println(" "); 
+//}
 void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the result.
-	//The following code would be replaced with your code that does something with the ping result.
+    //Accepts sensor data from echoCheck and sets the sonarFlag to true or false
     if ((cm[sensor] < 20)){
       Serial.println("UNDER 20");
       sonarFlag = false;
@@ -70,9 +81,5 @@ void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the re
       sonarFlag = true;
       Serial.println(sonarFlag);
   	}    
-    	Serial.print(sensor);
-    	Serial.print(" ");
-    	Serial.print(cm[sensor]);
-    	Serial.println("cm");
-      Serial.println(" "); 
+   //viewPingResultData(cm[sensor],sensor);	
 }
