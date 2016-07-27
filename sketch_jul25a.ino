@@ -58,28 +58,28 @@ void echoCheck() { // If ping received, set the sensor distance to array.
   } 
 }
 
-//void viewPingResultData(uin8_t sensor) {
-//      Serial.print(sensor);
-//      Serial.print(" ");
-//      Serial.print(cm[sensor]);
-//      Serial.println("cm");
-//      Serial.println(" "); 
-//}
 void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the result.
     //Accepts sensor data from echoCheck and sets the sonarFlag to true or false
     if ((cm[sensor] < 20)){
-      Serial.println("UNDER 20");
-      sonarFlag = false;
-      Serial.println(sonarFlag);   
+      Serial.println("GROUP:  Under 20");
+      sonarFlag = false;   
   	}
     else if((cm[sensor] < 35)){
-      Serial.println("OVER 20 UNDER 35"); 
-      Serial.println(sonarFlag);  
+      Serial.println("GROUP:  20 to 35");  
   	}
   	else{
-      Serial.println("OVER 35");
+      Serial.println("GROUP:  Over 35");
       sonarFlag = true;
-      Serial.println(sonarFlag);
   	}    
-   //viewPingResultData(cm[sensor],sensor);	
+    Serial.print("SENSOR:  ");
+    Serial.println(sensor);
+    
+  	Serial.print("DISTANCE:  ");
+    Serial.print( cm[sensor]); 
+    Serial.println("cm");
+  	Serial.print("FLAG:  ");
+    Serial.print(sonarFlag);
+   
+    Serial.println(" "); 	
+    Serial.println(" ");
 }
