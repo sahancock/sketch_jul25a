@@ -8,6 +8,8 @@ unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should
 unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 
+boolean sonarFlag = true;                //Sets control flag for making starting and stopping features
+
 NewPing sonar[SONAR_NUM] = {   // Sensor object array.
 	NewPing(4, 5, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
 	NewPing(6, 7, MAX_DISTANCE),
@@ -20,11 +22,10 @@ void setup() {
 	Serial.begin(9600);
 	pingTimer[0] = millis() + 75;           // First ping starts at 75ms, gives time for the Arduino to chill before starting.
 	for (uint8_t i = 1; i < SONAR_NUM; i++) // Set the starting time for each sensor.
-		pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
+	pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
 }
 
 void loop() {
-
 	for (uint8_t i = 0; i < SONAR_NUM; i++) {// Loop through all the sensors.   
 		if (millis() >= pingTimer[i]) {         // Is it this sensor's time to ping?
 		  pingTimer[i] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
@@ -34,7 +35,12 @@ void loop() {
 		  sonar[currentSensor].ping_timer(echoCheck);// Do the ping (processing continues, interrupt will call echoCheck to look for echo).
 		}
 	}
-  // Other code that *DOESN'T* analyze ping results can go here.
+  if(sonarFlag == true){
+    digitalWrite(13,HIGH);
+  }
+  else{
+    digitalWrite(13,LOW);
+  }
 }
 
 void echoCheck() { // If ping received, set the sensor distance to array.
@@ -52,21 +58,24 @@ void echoCheck() { // If ping received, set the sensor distance to array.
 void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the result.
 	//The following code would be replaced with your code that does something with the ping result.
     if ((cm[sensor] < 20)){
-    Serial.print("MOVE AWAY YOUR TOO CLOSE !!!!!!");
-    Serial.println(" ");
-    digitalWrite(13,LOW);   
+    Serial.println("UNDER 20");
+    sonarFlag = false;
+Serial.println(sonarFlag);   
 	}
     else if((cm[sensor] < 35)){
-    Serial.print("BE CAREFUL I CAN HURT YOU !!!!!!");
-    Serial.println(" ");
+    Serial.println("OVER 20 UNDER 35"); 
+    Serial.println(sonarFlag);  
 	}
 	else{
-      digitalWrite(13,HIGH);
+    Serial.println("OVER 35");
+    sonarFlag = true;
+    Serial.println(sonarFlag);
 	}    
-	Serial.print(sensor);
-	Serial.print(" ");
-	Serial.print(cm[sensor]);
-	Serial.println("cm"); 
+  	Serial.print(sensor);
+  	Serial.print(" ");
+  	Serial.print(cm[sensor]);
+  	Serial.println("cm");
+    Serial.println(" "); 
 }
 
  
