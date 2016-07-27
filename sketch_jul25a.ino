@@ -47,35 +47,32 @@ void echoCheck() { // If ping received, set the sensor distance to array.
 	if (sonar[currentSensor].check_timer()) {
 		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
 		if( sonar[currentSensor].ping_result == false){
-			digitalWrite(13,HIGH);
 		}
 		else{
 			pingResult(currentSensor);
 		}
-    }  
+  }  
 }
 
 void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the result.
 	//The following code would be replaced with your code that does something with the ping result.
     if ((cm[sensor] < 20)){
-    Serial.println("UNDER 20");
-    sonarFlag = false;
-Serial.println(sonarFlag);   
-	}
+      Serial.println("UNDER 20");
+      sonarFlag = false;
+      Serial.println(sonarFlag);   
+  	}
     else if((cm[sensor] < 35)){
-    Serial.println("OVER 20 UNDER 35"); 
-    Serial.println(sonarFlag);  
-	}
-	else{
-    Serial.println("OVER 35");
-    sonarFlag = true;
-    Serial.println(sonarFlag);
-	}    
-  	Serial.print(sensor);
-  	Serial.print(" ");
-  	Serial.print(cm[sensor]);
-  	Serial.println("cm");
-    Serial.println(" "); 
+      Serial.println("OVER 20 UNDER 35"); 
+      Serial.println(sonarFlag);  
+  	}
+  	else{
+      Serial.println("OVER 35");
+      sonarFlag = true;
+      Serial.println(sonarFlag);
+  	}    
+    	Serial.print(sensor);
+    	Serial.print(" ");
+    	Serial.print(cm[sensor]);
+    	Serial.println("cm");
+      Serial.println(" "); 
 }
-
- 
