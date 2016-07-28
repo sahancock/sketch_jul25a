@@ -31,7 +31,8 @@ void loop() {
 		  pingTimer[i] += PING_INTERVAL * SONAR_NUM;  // Set next time this sensor will be pinged.
 		  sonar[currentSensor].timer_stop();          // Make sure previous timer is canceled before starting a new ping (insurance).
 		  currentSensor = i; // Sensor being accessed. 
-		  cm[currentSensor] = 0; // Make distance zero in case there's no ping echo for this sensor.
+		  cm[currentSensor] = -1; // Make distance zero in case there's no ping echo for this sensor.
+      
 		  sonar[currentSensor].ping_timer(echoCheck);// Do the ping (processing continues, interrupt will call echoCheck to look for echo).
 		}
 	}
@@ -46,17 +47,13 @@ void loop() {
 
 void echoCheck() { // If ping received, set the sensor distance to array.
 	if (sonar[currentSensor].check_timer()) {
-		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
-		if( sonar[currentSensor].ping_result = false){
-      digitalWrite(13,HIGH);
-		}
-		else{
-			pingResult(currentSensor);
-		}
+  		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
+  		pingResult(currentSensor);
   } 
 }
 
 void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the result.
+    
     //Accepts sensor data from echoCheck and sets the sonarFlag to true or false
     int group = 0;
 	  if ((cm[sensor] < 20)){
@@ -70,16 +67,21 @@ void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the re
       sonarFlag = true;
       group = 3;
   	}    
-    
+
+    //Displays the sensor data
 	  Serial.print("   GROUP:  ");
     Serial.println(group);
+    
 	  Serial.print("  SENSOR:  ");
     Serial.println(sensor);
+    
   	Serial.print("DISTANCE:  ");
     Serial.print( cm[sensor]); 
     Serial.println("cm");
+    
   	Serial.print("   LIGHT:  ");
     Serial.print(sonarFlag);
+    
     Serial.println(" "); 	
     Serial.println(" ");
 }
