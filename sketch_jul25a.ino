@@ -80,8 +80,7 @@ void pingResult(uint8_t sensor) { // Sensor got a ping, do something with the re
     Serial.println("cm");
     
   	Serial.print("   LIGHT:  ");
-    Serial.print(sonarFlag);
+    Serial.println(sonarFlag);
     
-    Serial.println(" "); 	
-    Serial.println(" ");
+    Serial.println("-------------------");
 }
